@@ -93,6 +93,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Bites — Food delivery, personalized by AI" },
+      { name: "description", content: "Order from the best restaurants near you with AI-powered recommendations, fast delivery, and live tracking." },
+      { property: "og:description", content: "Order from the best restaurants near you with AI-powered recommendations, fast delivery, and live tracking." },
+      { name: "twitter:description", content: "Order from the best restaurants near you with AI-powered recommendations, fast delivery, and live tracking." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/1042456d-ecc6-4482-bc5c-a90ad9f05397" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/1042456d-ecc6-4482-bc5c-a90ad9f05397" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
