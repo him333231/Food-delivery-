@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search, Sparkles, ArrowRight, Star } from "lucide-react";
-import { categories, restaurants, dishes } from "@/lib/data";
+import { categories, restaurants } from "@/lib/data";
 import { RestaurantCard } from "@/components/RestaurantCard";
-import { DishCard } from "@/components/DishCard";
+import { AiRecommendations } from "@/components/AiRecommendations";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -10,7 +10,6 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const featured = restaurants.slice(0, 4);
-  const recommended = dishes.slice(0, 4);
 
   return (
     <div>
