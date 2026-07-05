@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search, Sparkles, ArrowRight, Star } from "lucide-react";
-import { categories, restaurants, dishes } from "@/lib/data";
+import { categories, restaurants } from "@/lib/data";
 import { RestaurantCard } from "@/components/RestaurantCard";
-import { DishCard } from "@/components/DishCard";
+import { AiRecommendations } from "@/components/AiRecommendations";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -10,7 +10,6 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const featured = restaurants.slice(0, 4);
-  const recommended = dishes.slice(0, 4);
 
   return (
     <div>
@@ -104,27 +103,8 @@ function Home() {
       </section>
 
       {/* AI RECOMMENDED */}
-      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full bg-primary-soft px-3 py-1 text-xs font-semibold text-primary">
-              <Sparkles className="h-3.5 w-3.5" /> AI Recommended
-            </span>
-            <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">
-              Picked for your Friday evening
-            </h2>
-            <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-              Since you usually order Pizza on Friday evenings, you may love
-              Pepperoni Pizza with Garlic Bread and Coke.
-            </p>
-          </div>
-        </div>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {recommended.map((d) => (
-            <DishCard key={d.id} dish={d} />
-          ))}
-        </div>
-      </section>
+      <AiRecommendations />
+
 
       {/* POPULAR RESTAURANTS */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6">

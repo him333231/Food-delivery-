@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Minus, Plus, Trash2, Tag, MapPin, CreditCard, Wallet, Banknote } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
+import { recordOrder } from "@/lib/recommendations";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
@@ -272,6 +273,7 @@ function CartPage() {
 
           <button
             onClick={() => {
+              recordOrder(items.map((i) => i.dish.id));
               clear();
               setPlaced(true);
             }}
