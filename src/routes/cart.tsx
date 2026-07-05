@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Minus, Plus, Trash2, Tag, MapPin, CreditCard, Wallet, Banknote } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
-import { recordOrder } from "@/lib/recommendations";
+import { recordOrder, saveOrder } from "@/lib/recommendations";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
@@ -49,12 +49,20 @@ function CartPage() {
         <p className="mt-2 text-muted-foreground">
           Your food is being prepared. You'll get live updates soon.
         </p>
-        <Link
-          to="/"
-          className="mt-6 inline-block rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground shadow-soft"
-        >
-          Back to home
-        </Link>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Link
+            to="/orders"
+            className="inline-block rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground shadow-soft"
+          >
+            View my orders
+          </Link>
+          <Link
+            to="/"
+            className="inline-block rounded-full border border-border/60 bg-card px-6 py-3 font-semibold"
+          >
+            Back to home
+          </Link>
+        </div>
       </div>
     );
   }
@@ -274,6 +282,17 @@ function CartPage() {
           <button
             onClick={() => {
               recordOrder(items.map((i) => i.dish.id));
+              saveOrder({
+                total,
+                items: items.map((i) => ({
+                  id: i.dish.id,
+                  name: i.dish.name,
+                  image: i.dish.image,
+                  price: i.dish.price,
+                  quantity: i.quantity,
+                  restaurantName: i.dish.restaurantName,
+                })),
+              });
               clear();
               setPlaced(true);
             }}

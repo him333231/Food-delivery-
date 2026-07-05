@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ShoppingCart, MapPin, Search } from "lucide-react";
+import { ShoppingCart, MapPin, Search, Receipt } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 
 export function Navbar() {
@@ -33,6 +33,14 @@ export function Navbar() {
             activeProps={{ className: "text-primary bg-primary-soft" }}
           >
             Restaurants
+          </Link>
+          <Link
+            to="/orders"
+            className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 hover:bg-primary-soft"
+            activeProps={{ className: "text-primary bg-primary-soft" }}
+          >
+            <Receipt className="h-4 w-4" />
+            <span className="hidden sm:inline">Orders</span>
           </Link>
           <button
             className="hidden rounded-lg p-2 hover:bg-primary-soft sm:inline-flex"
