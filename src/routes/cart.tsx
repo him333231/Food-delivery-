@@ -1,8 +1,30 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { Minus, Plus, Trash2, Tag, MapPin, CreditCard, Wallet, Banknote } from "lucide-react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import {
+  Minus,
+  Plus,
+  Trash2,
+  Tag,
+  MapPin,
+  CreditCard,
+  Wallet,
+  Banknote,
+  Home,
+  Briefcase,
+  MoreHorizontal,
+  Check,
+} from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { recordOrder, saveOrder } from "@/lib/recommendations";
+import { formatINR } from "@/lib/currency";
+import {
+  getAddresses,
+  saveAddress,
+  deleteAddress,
+  getSelectedAddressId,
+  setSelectedAddressId,
+  type Address,
+} from "@/lib/address-store";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
@@ -20,17 +42,66 @@ const COUPONS: Record<string, number> = {
   WELCOME10: 0.1,
 };
 
+const LABEL_ICON: Record<string, typeof Home> = {
+  Home,
+  Work: Briefcase,
+  Other: MoreHorizontal,
+};
+
 function CartPage() {
+  const navigate = useNavigate();
   const { items, updateQuantity, removeItem, subtotal, clear } = useCart();
   const [coupon, setCoupon] = useState("");
   const [applied, setApplied] = useState<string | null>(null);
   const [payment, setPayment] = useState("card");
-  const [placed, setPlaced] = useState(false);
+
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [selectedAddr, setSelectedAddr] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({
+    label: "Home",
+    name: "",
+    phone: "",
+    line1: "",
+    city: "Bengaluru",
+    zip: "",
+  });
+
+  useEffect(() => {
+    const list = getAddresses();
+    setAddresses(list);
+    const sel = getSelectedAddressId();
+    if (sel && list.some((a) => a.id === sel)) setSelectedAddr(sel);
+    else if (list[0]) setSelectedAddr(list[0].id);
+    else setShowForm(true);
+  }, []);
+
+  const chooseAddress = (id: string) => {
+    setSelectedAddr(id);
+    setSelectedAddressId(id);
+  };
+
+  const submitAddress = () => {
+    if (!form.name.trim() || !form.line1.trim() || !form.phone.trim()) return;
+    const saved = saveAddress(form);
+    const next = [saved, ...addresses];
+    setAddresses(next);
+    setSelectedAddr(saved.id);
+    setShowForm(false);
+    setForm({ label: "Home", name: "", phone: "", line1: "", city: "Bengaluru", zip: "" });
+  };
+
+  const removeAddr = (id: string) => {
+    deleteAddress(id);
+    const next = addresses.filter((a) => a.id !== id);
+    setAddresses(next);
+    if (selectedAddr === id) setSelectedAddr(next[0]?.id ?? null);
+  };
 
   const discountRate = applied ? COUPONS[applied] ?? 0 : 0;
   const discount = subtotal * discountRate;
-  const deliveryFee = subtotal > 25 || applied === "FREESHIP" ? 0 : 2.99;
-  const tax = (subtotal - discount) * 0.08;
+  const deliveryFee = subtotal > 499 || applied === "FREESHIP" ? 0 : 39;
+  const tax = (subtotal - discount) * 0.05; // 5% GST
   const total = subtotal - discount + deliveryFee + tax;
 
   const applyCoupon = () => {
@@ -39,33 +110,27 @@ function CartPage() {
     else setApplied(null);
   };
 
-  if (placed) {
-    return (
-      <div className="mx-auto max-w-lg px-4 py-24 text-center">
-        <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-success/15 text-4xl">
-          ✅
-        </div>
-        <h1 className="mt-6 font-display text-3xl font-bold">Order placed!</h1>
-        <p className="mt-2 text-muted-foreground">
-          Your food is being prepared. You'll get live updates soon.
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <Link
-            to="/orders"
-            className="inline-block rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground shadow-soft"
-          >
-            View my orders
-          </Link>
-          <Link
-            to="/"
-            className="inline-block rounded-full border border-border/60 bg-card px-6 py-3 font-semibold"
-          >
-            Back to home
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  const placeOrder = () => {
+    if (items.length === 0) return;
+    if (!selectedAddr && addresses.length === 0) {
+      setShowForm(true);
+      return;
+    }
+    recordOrder(items.map((i) => i.dish.id));
+    const record = saveOrder({
+      total,
+      items: items.map((i) => ({
+        id: i.dish.id,
+        name: i.dish.name,
+        image: i.dish.image,
+        price: i.dish.price,
+        quantity: i.quantity,
+        restaurantName: i.dish.restaurantName,
+      })),
+    });
+    clear();
+    navigate({ to: "/track/$id", params: { id: record.id } });
+  };
 
   if (items.length === 0) {
     return (
@@ -124,15 +189,13 @@ function CartPage() {
                         </p>
                       </div>
                       <span className="font-semibold">
-                        ${(i.dish.price * i.quantity).toFixed(2)}
+                        {formatINR(i.dish.price * i.quantity)}
                       </span>
                     </div>
                     <div className="mt-3 flex items-center justify-between">
                       <div className="inline-flex items-center gap-2 rounded-full border border-border/60 p-1">
                         <button
-                          onClick={() =>
-                            updateQuantity(i.dish.id, i.quantity - 1)
-                          }
+                          onClick={() => updateQuantity(i.dish.id, i.quantity - 1)}
                           className="grid h-7 w-7 place-items-center rounded-full bg-secondary hover:bg-primary-soft"
                           aria-label="Decrease"
                         >
@@ -142,9 +205,7 @@ function CartPage() {
                           {i.quantity}
                         </span>
                         <button
-                          onClick={() =>
-                            updateQuantity(i.dish.id, i.quantity + 1)
-                          }
+                          onClick={() => updateQuantity(i.dish.id, i.quantity + 1)}
                           className="grid h-7 w-7 place-items-center rounded-full bg-secondary hover:bg-primary-soft"
                           aria-label="Increase"
                         >
@@ -164,45 +225,152 @@ function CartPage() {
             </ul>
           </section>
 
+          {/* Address book */}
           <section className="rounded-2xl border border-border/60 bg-card p-4 sm:p-6">
-            <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
-              <MapPin className="h-5 w-5 text-primary" /> Delivery address
-            </h2>
-            <div className="mt-3 grid gap-2 sm:grid-cols-2">
-              <input
-                defaultValue="Jane Doe"
-                className="rounded-xl border border-border/60 bg-background px-4 py-2.5 text-sm outline-none focus:border-primary"
-                placeholder="Full name"
-              />
-              <input
-                defaultValue="+1 555 010 2030"
-                className="rounded-xl border border-border/60 bg-background px-4 py-2.5 text-sm outline-none focus:border-primary"
-                placeholder="Phone"
-              />
-              <input
-                defaultValue="221 Baker Street, Apt 4B"
-                className="rounded-xl border border-border/60 bg-background px-4 py-2.5 text-sm outline-none focus:border-primary sm:col-span-2"
-                placeholder="Street address"
-              />
-              <input
-                defaultValue="Downtown"
-                className="rounded-xl border border-border/60 bg-background px-4 py-2.5 text-sm outline-none focus:border-primary"
-                placeholder="City"
-              />
-              <input
-                defaultValue="10001"
-                className="rounded-xl border border-border/60 bg-background px-4 py-2.5 text-sm outline-none focus:border-primary"
-                placeholder="ZIP"
-              />
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
+                <MapPin className="h-5 w-5 text-primary" /> Delivery address
+              </h2>
+              {!showForm && (
+                <button
+                  onClick={() => setShowForm(true)}
+                  className="text-xs font-semibold text-primary hover:underline"
+                >
+                  + Add new
+                </button>
+              )}
             </div>
+
+            {addresses.length > 0 && (
+              <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+                {addresses.map((a) => {
+                  const Icon = LABEL_ICON[a.label] ?? Home;
+                  const active = selectedAddr === a.id;
+                  return (
+                    <li key={a.id}>
+                      <button
+                        onClick={() => chooseAddress(a.id)}
+                        className={`flex w-full items-start gap-3 rounded-xl border p-3 text-left transition ${
+                          active
+                            ? "border-primary bg-primary-soft"
+                            : "border-border/60 hover:border-primary/40"
+                        }`}
+                      >
+                        <div
+                          className={`grid h-9 w-9 shrink-0 place-items-center rounded-lg ${
+                            active ? "bg-primary text-primary-foreground" : "bg-secondary"
+                          }`}
+                        >
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-semibold">{a.label}</span>
+                            {active && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                                <Check className="h-3 w-3" /> Selected
+                              </span>
+                            )}
+                          </div>
+                          <p className="truncate text-xs text-muted-foreground">
+                            {a.name} · {a.phone}
+                          </p>
+                          <p className="truncate text-xs text-muted-foreground">
+                            {a.line1}, {a.city} {a.zip}
+                          </p>
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeAddr(a.id);
+                          }}
+                          className="text-muted-foreground hover:text-destructive"
+                          aria-label="Delete address"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+
+            {showForm && (
+              <div className="mt-4 rounded-xl border border-dashed border-border/60 p-4">
+                <div className="flex gap-2">
+                  {(["Home", "Work", "Other"] as const).map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => setForm((f) => ({ ...f, label: l }))}
+                      className={`rounded-full border px-3 py-1 text-xs font-semibold ${
+                        form.label === l
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-border/60"
+                      }`}
+                    >
+                      {l}
+                    </button>
+                  ))}
+                </div>
+                <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                  <input
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    className="rounded-xl border border-border/60 bg-background px-4 py-2.5 text-sm outline-none focus:border-primary"
+                    placeholder="Full name"
+                  />
+                  <input
+                    value={form.phone}
+                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                    className="rounded-xl border border-border/60 bg-background px-4 py-2.5 text-sm outline-none focus:border-primary"
+                    placeholder="Phone (+91)"
+                  />
+                  <input
+                    value={form.line1}
+                    onChange={(e) => setForm({ ...form, line1: e.target.value })}
+                    className="rounded-xl border border-border/60 bg-background px-4 py-2.5 text-sm outline-none focus:border-primary sm:col-span-2"
+                    placeholder="Flat / street address"
+                  />
+                  <input
+                    value={form.city}
+                    onChange={(e) => setForm({ ...form, city: e.target.value })}
+                    className="rounded-xl border border-border/60 bg-background px-4 py-2.5 text-sm outline-none focus:border-primary"
+                    placeholder="City"
+                  />
+                  <input
+                    value={form.zip}
+                    onChange={(e) => setForm({ ...form, zip: e.target.value })}
+                    className="rounded-xl border border-border/60 bg-background px-4 py-2.5 text-sm outline-none focus:border-primary"
+                    placeholder="PIN code"
+                  />
+                </div>
+                <div className="mt-3 flex justify-end gap-2">
+                  {addresses.length > 0 && (
+                    <button
+                      onClick={() => setShowForm(false)}
+                      className="rounded-full border border-border/60 px-4 py-2 text-sm font-semibold"
+                    >
+                      Cancel
+                    </button>
+                  )}
+                  <button
+                    onClick={submitAddress}
+                    className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-soft"
+                  >
+                    Save address
+                  </button>
+                </div>
+              </div>
+            )}
           </section>
 
           <section className="rounded-2xl border border-border/60 bg-card p-4 sm:p-6">
             <h2 className="font-display text-lg font-semibold">Payment method</h2>
             <div className="mt-3 grid gap-2 sm:grid-cols-3">
               {[
-                { id: "card", label: "Credit card", icon: CreditCard },
-                { id: "wallet", label: "Wallet", icon: Wallet },
+                { id: "card", label: "Credit / Debit card", icon: CreditCard },
+                { id: "wallet", label: "UPI / Wallet", icon: Wallet },
                 { id: "cod", label: "Cash on delivery", icon: Banknote },
               ].map((p) => {
                 const Icon = p.icon;
@@ -261,7 +429,11 @@ function CartPage() {
           <div className="mt-5 space-y-2 text-sm">
             <Row label="Subtotal" value={subtotal} />
             {discount > 0 && (
-              <Row label={`Discount (${Math.round(discountRate * 100)}%)`} value={-discount} accent />
+              <Row
+                label={`Discount (${Math.round(discountRate * 100)}%)`}
+                value={-discount}
+                accent
+              />
             )}
             <Row
               label="Delivery"
@@ -269,36 +441,24 @@ function CartPage() {
               muted={deliveryFee === 0}
               zeroLabel="Free"
             />
-            <Row label="Tax (8%)" value={tax} />
+            <Row label="GST (5%)" value={tax} />
             <div className="my-3 border-t border-border/60" />
             <div className="flex items-center justify-between">
               <span className="font-display text-lg font-bold">Total</span>
               <span className="font-display text-xl font-bold text-primary">
-                ${total.toFixed(2)}
+                {formatINR(total)}
               </span>
             </div>
           </div>
 
           <button
-            onClick={() => {
-              recordOrder(items.map((i) => i.dish.id));
-              saveOrder({
-                total,
-                items: items.map((i) => ({
-                  id: i.dish.id,
-                  name: i.dish.name,
-                  image: i.dish.image,
-                  price: i.dish.price,
-                  quantity: i.quantity,
-                  restaurantName: i.dish.restaurantName,
-                })),
-              });
-              clear();
-              setPlaced(true);
-            }}
-            className="mt-6 w-full rounded-full bg-primary px-5 py-3 font-semibold text-primary-foreground shadow-soft transition hover:opacity-90 active:scale-[0.98]"
+            onClick={placeOrder}
+            disabled={!selectedAddr}
+            className="mt-6 w-full rounded-full bg-primary px-5 py-3 font-semibold text-primary-foreground shadow-soft transition hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Place order · ${total.toFixed(2)}
+            {selectedAddr
+              ? `Place order · ${formatINR(total)}`
+              : "Add an address to continue"}
           </button>
           <p className="mt-3 text-center text-xs text-muted-foreground">
             By placing an order you agree to our Terms.
@@ -334,8 +494,9 @@ function Row({
               : "font-medium"
         }
       >
-        {muted && zeroLabel && value === 0 ? zeroLabel : `$${Math.abs(value).toFixed(2)}`}
-        {value < 0 ? "" : ""}
+        {muted && zeroLabel && value === 0
+          ? zeroLabel
+          : `${value < 0 ? "-" : ""}${formatINR(Math.abs(value))}`}
       </span>
     </div>
   );

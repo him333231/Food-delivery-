@@ -1,8 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Search, SlidersHorizontal } from "lucide-react";
-import { restaurants, categories } from "@/lib/data";
+import { Search, SlidersHorizontal, Sparkles, Star, Plus } from "lucide-react";
+import { restaurants, categories, dishes } from "@/lib/data";
 import { RestaurantCard } from "@/components/RestaurantCard";
+import { useCart } from "@/lib/cart-context";
+import { formatINR } from "@/lib/currency";
+import { getUserPrefs } from "@/lib/recommendations";
 
 export const Route = createFileRoute("/restaurants")({
   head: () => ({
@@ -24,11 +27,14 @@ function RestaurantsPage() {
   const [activeCat, setActiveCat] = useState<string | null>(null);
   const [vegOnly, setVegOnly] = useState(false);
   const [sort, setSort] = useState<Sort>("recommended");
+  const { addItem } = useCart();
 
   const list = useMemo(() => {
-    let l = restaurants.filter((r) =>
-      r.name.toLowerCase().includes(query.toLowerCase()) ||
-      r.cuisine.toLowerCase().includes(query.toLowerCase()),
+    const q = query.toLowerCase().trim();
+    let l = restaurants.filter(
+      (r) =>
+        r.name.toLowerCase().includes(q) ||
+        r.cuisine.toLowerCase().includes(q),
     );
     if (activeCat) {
       l = l.filter((r) => r.cuisine.toLowerCase().includes(activeCat));
@@ -42,6 +48,35 @@ function RestaurantsPage() {
     return l;
   }, [query, activeCat, vegOnly, sort]);
 
+  // AI-powered dish search: match dishes by name/ingredients/cuisine,
+  // then boost by user favorite categories.
+  const aiDishMatches = useMemo(() => {
+    const q = query.toLowerCase().trim();
+    if (!q) return [];
+    const prefs = getUserPrefs();
+    const favs = new Set(prefs.favoriteCategories);
+    const scored = dishes
+      .map((d) => {
+        const hay = `${d.name} ${d.category} ${d.description} ${d.ingredients.join(
+          " ",
+        )} ${d.restaurantName}`.toLowerCase();
+        let score = 0;
+        if (d.name.toLowerCase().includes(q)) score += 8;
+        if (d.category.toLowerCase().includes(q)) score += 6;
+        if (d.ingredients.some((i) => i.toLowerCase().includes(q))) score += 4;
+        if (hay.includes(q)) score += 2;
+        if (favs.has(d.category)) score += 3;
+        score += d.rating;
+        if (vegOnly && !d.veg) score = 0;
+        return { d, score };
+      })
+      .filter((x) => x.score > 3)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3)
+      .map((x) => x.d);
+    return scored;
+  }, [query, vegOnly]);
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       <div className="flex flex-col gap-2">
@@ -49,7 +84,7 @@ function RestaurantsPage() {
           Restaurants near you
         </h1>
         <p className="text-sm text-muted-foreground">
-          {list.length} places delivering to Downtown
+          {list.length} places delivering to Bengaluru
         </p>
       </div>
 
@@ -60,7 +95,7 @@ function RestaurantsPage() {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search restaurants or cuisines..."
+            placeholder="Search dishes, cuisines, or restaurants..."
             className="min-w-0 flex-1 bg-transparent py-2.5 text-sm outline-none"
           />
         </div>
@@ -89,6 +124,66 @@ function RestaurantsPage() {
           </div>
         </div>
       </div>
+
+      {/* AI dish suggestions */}
+      {query && aiDishMatches.length > 0 && (
+        <section className="mt-6 rounded-2xl border border-primary/25 bg-primary-soft/50 p-4 sm:p-5">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-primary-foreground">
+              <Sparkles className="h-3 w-3" /> AI picks
+            </span>
+            <p className="text-sm text-muted-foreground">
+              Dishes matching “{query}”, tuned to your taste
+            </p>
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {aiDishMatches.map((d) => (
+              <div
+                key={d.id}
+                className="flex gap-3 rounded-xl border border-border/60 bg-card p-3"
+              >
+                <Link
+                  to="/dish/$id"
+                  params={{ id: d.id }}
+                  className="shrink-0"
+                >
+                  <img
+                    src={d.image}
+                    alt={d.name}
+                    className="h-16 w-16 rounded-lg object-cover"
+                  />
+                </Link>
+                <div className="min-w-0 flex-1">
+                  <Link
+                    to="/dish/$id"
+                    params={{ id: d.id }}
+                    className="line-clamp-1 text-sm font-semibold hover:text-primary"
+                  >
+                    {d.name}
+                  </Link>
+                  <p className="line-clamp-1 text-xs text-muted-foreground">
+                    {d.restaurantName}
+                  </p>
+                  <div className="mt-1 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-2 text-xs">
+                      <span className="inline-flex items-center gap-1 font-semibold text-success">
+                        <Star className="h-3 w-3 fill-current" /> {d.rating}
+                      </span>
+                      <span className="font-semibold">{formatINR(d.price)}</span>
+                    </span>
+                    <button
+                      onClick={() => addItem(d)}
+                      className="inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground shadow-soft"
+                    >
+                      <Plus className="h-3 w-3" /> Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Categories */}
       <div className="mt-6 flex gap-2 overflow-x-auto pb-2">
