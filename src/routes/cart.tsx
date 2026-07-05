@@ -49,12 +49,20 @@ function CartPage() {
         <p className="mt-2 text-muted-foreground">
           Your food is being prepared. You'll get live updates soon.
         </p>
-        <Link
-          to="/"
-          className="mt-6 inline-block rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground shadow-soft"
-        >
-          Back to home
-        </Link>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Link
+            to="/orders"
+            className="inline-block rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground shadow-soft"
+          >
+            View my orders
+          </Link>
+          <Link
+            to="/"
+            className="inline-block rounded-full border border-border/60 bg-card px-6 py-3 font-semibold"
+          >
+            Back to home
+          </Link>
+        </div>
       </div>
     );
   }
