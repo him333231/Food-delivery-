@@ -274,6 +274,17 @@ function CartPage() {
           <button
             onClick={() => {
               recordOrder(items.map((i) => i.dish.id));
+              saveOrder({
+                total,
+                items: items.map((i) => ({
+                  id: i.dish.id,
+                  name: i.dish.name,
+                  image: i.dish.image,
+                  price: i.dish.price,
+                  quantity: i.quantity,
+                  restaurantName: i.dish.restaurantName,
+                })),
+              });
               clear();
               setPlaced(true);
             }}
