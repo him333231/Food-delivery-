@@ -9,6 +9,45 @@ export type Recommendation = {
 };
 
 const STORAGE_KEY = "bites_user_prefs_v1";
+const ORDERS_KEY = "bites_user_orders_v1";
+
+export type OrderItemSnapshot = {
+  id: string;
+  name: string;
+  image: string;
+  price: number;
+  quantity: number;
+  restaurantName: string;
+};
+
+export type OrderRecord = {
+  id: string;
+  placedAt: number;
+  total: number;
+  items: OrderItemSnapshot[];
+};
+
+export function getOrders(): OrderRecord[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(ORDERS_KEY);
+    if (raw) return JSON.parse(raw) as OrderRecord[];
+  } catch {
+    // ignore
+  }
+  return [];
+}
+
+export function saveOrder(order: Omit<OrderRecord, "id" | "placedAt">) {
+  if (typeof window === "undefined") return;
+  const prev = getOrders();
+  const next: OrderRecord = {
+    id: `ord_${Date.now()}`,
+    placedAt: Date.now(),
+    ...order,
+  };
+  window.localStorage.setItem(ORDERS_KEY, JSON.stringify([next, ...prev].slice(0, 50)));
+}
 
 export type UserPrefs = {
   orderHistory: string[]; // dish ids
