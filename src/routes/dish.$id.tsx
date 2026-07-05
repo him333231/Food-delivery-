@@ -109,7 +109,7 @@ function DishDetails() {
           <div className="mt-6">
             <h3 className="text-sm font-semibold">Ingredients</h3>
             <div className="mt-2 flex flex-wrap gap-2">
-              {dish.ingredients.map((i) => (
+              {dish.ingredients.map((i: string) => (
                 <span
                   key={i}
                   className="rounded-full bg-secondary px-3 py-1 text-xs font-medium"
