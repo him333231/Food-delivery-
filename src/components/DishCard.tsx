@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Star, Plus } from "lucide-react";
 import type { Dish } from "@/lib/data";
 import { useCart } from "@/lib/cart-context";
+import { formatINR } from "@/lib/currency";
 
 export function DishCard({ dish }: { dish: Dish }) {
   const { addItem } = useCart();
@@ -42,7 +43,7 @@ export function DishCard({ dish }: { dish: Dish }) {
         </div>
         <div className="mt-3 flex items-center justify-between">
           <span className="font-display text-lg font-bold">
-            ${dish.price.toFixed(2)}
+            {formatINR(dish.price)}
           </span>
           <button
             onClick={() => addItem(dish)}
