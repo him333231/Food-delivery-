@@ -1,7 +1,7 @@
 export type Dish = {
   id: string;
   name: string;
-  price: number;
+  price: number; // INR
   rating: number;
   image: string;
   restaurantId: string;
@@ -20,12 +20,14 @@ export type Restaurant = {
   deliveryTime: string;
   distance: string;
   cuisine: string;
-  deliveryFee: number;
+  deliveryFee: number; // INR
   veg: boolean;
   offer?: string;
 };
 
 export const categories = [
+  { id: "indian", name: "Indian", emoji: "🍛" },
+  { id: "biryani", name: "Biryani", emoji: "🍚" },
   { id: "pizza", name: "Pizza", emoji: "🍕" },
   { id: "burger", name: "Burgers", emoji: "🍔" },
   { id: "sushi", name: "Sushi", emoji: "🍣" },
@@ -48,9 +50,9 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "25-30 min",
     distance: "1.2 km",
     cuisine: "Italian, Pizza",
-    deliveryFee: 2.5,
+    deliveryFee: 39,
     veg: false,
-    offer: "20% OFF up to $5",
+    offer: "20% OFF up to ₹150",
   },
   {
     id: "r2",
@@ -60,7 +62,7 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "30-40 min",
     distance: "2.4 km",
     cuisine: "Japanese, Sushi",
-    deliveryFee: 3.0,
+    deliveryFee: 49,
     veg: false,
   },
   {
@@ -71,7 +73,7 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "15-20 min",
     distance: "0.8 km",
     cuisine: "Healthy, Salads",
-    deliveryFee: 1.5,
+    deliveryFee: 25,
     veg: true,
     offer: "Free delivery",
   },
@@ -83,7 +85,7 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "20-25 min",
     distance: "1.6 km",
     cuisine: "American, Burgers",
-    deliveryFee: 2.0,
+    deliveryFee: 35,
     veg: false,
   },
   {
@@ -94,7 +96,7 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "25-35 min",
     distance: "2.0 km",
     cuisine: "Mexican",
-    deliveryFee: 2.5,
+    deliveryFee: 39,
     veg: false,
     offer: "Buy 1 Get 1",
   },
@@ -106,7 +108,7 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "30-40 min",
     distance: "3.1 km",
     cuisine: "Asian, Chinese",
-    deliveryFee: 2.0,
+    deliveryFee: 35,
     veg: false,
   },
   {
@@ -117,7 +119,7 @@ export const restaurants: Restaurant[] = [
     deliveryTime: "20-30 min",
     distance: "1.4 km",
     cuisine: "Desserts, Bakery",
-    deliveryFee: 1.99,
+    deliveryFee: 29,
     veg: true,
   },
   {
@@ -127,9 +129,56 @@ export const restaurants: Restaurant[] = [
     rating: 4.5,
     deliveryTime: "35-45 min",
     distance: "2.8 km",
-    cuisine: "Indian",
-    deliveryFee: 2.5,
+    cuisine: "Indian, North Indian",
+    deliveryFee: 39,
     veg: false,
+  },
+  {
+    id: "r9",
+    name: "Punjab Grill",
+    image: img("photo-1601050690597-df0568f70950"),
+    rating: 4.7,
+    deliveryTime: "30-40 min",
+    distance: "2.1 km",
+    cuisine: "Indian, Punjabi, Tandoori",
+    deliveryFee: 45,
+    veg: false,
+    offer: "15% OFF above ₹499",
+  },
+  {
+    id: "r10",
+    name: "Paradise Biryani",
+    image: img("photo-1633945274309-2c16c9adfa62"),
+    rating: 4.8,
+    deliveryTime: "35-45 min",
+    distance: "3.4 km",
+    cuisine: "Indian, Biryani, Hyderabadi",
+    deliveryFee: 49,
+    veg: false,
+    offer: "Combo deals",
+  },
+  {
+    id: "r11",
+    name: "Sattvik Rasoi",
+    image: img("photo-1596797038530-2c107229654b"),
+    rating: 4.6,
+    deliveryTime: "25-35 min",
+    distance: "1.7 km",
+    cuisine: "Indian, North Indian, Vegetarian",
+    deliveryFee: 29,
+    veg: true,
+    offer: "Free delivery",
+  },
+  {
+    id: "r12",
+    name: "Chennai Express",
+    image: img("photo-1630383249896-424e482df921"),
+    rating: 4.5,
+    deliveryTime: "20-30 min",
+    distance: "1.9 km",
+    cuisine: "Indian, South Indian",
+    deliveryFee: 25,
+    veg: true,
   },
 ];
 
@@ -137,7 +186,7 @@ export const dishes: Dish[] = [
   {
     id: "d1",
     name: "Pepperoni Pizza",
-    price: 14.99,
+    price: 449,
     rating: 4.8,
     image: img("photo-1565299624946-b28f40a0ae38"),
     restaurantId: "r1",
@@ -151,7 +200,7 @@ export const dishes: Dish[] = [
   {
     id: "d2",
     name: "Salmon Nigiri Set",
-    price: 18.5,
+    price: 749,
     rating: 4.9,
     image: img("photo-1579871494447-9811cf80d66c"),
     restaurantId: "r2",
@@ -164,7 +213,7 @@ export const dishes: Dish[] = [
   {
     id: "d3",
     name: "Buddha Bowl",
-    price: 11.5,
+    price: 349,
     rating: 4.7,
     image: img("photo-1546793665-c74683f339c1"),
     restaurantId: "r3",
@@ -177,7 +226,7 @@ export const dishes: Dish[] = [
   {
     id: "d4",
     name: "Classic Cheeseburger",
-    price: 10.99,
+    price: 299,
     rating: 4.6,
     image: img("photo-1568901346375-23c9450c58cd"),
     restaurantId: "r4",
@@ -190,7 +239,7 @@ export const dishes: Dish[] = [
   {
     id: "d5",
     name: "Street Tacos (3)",
-    price: 9.99,
+    price: 329,
     rating: 4.5,
     image: img("photo-1565299585323-38d6b0865b47"),
     restaurantId: "r5",
@@ -203,7 +252,7 @@ export const dishes: Dish[] = [
   {
     id: "d6",
     name: "Ramen Tonkotsu",
-    price: 13.5,
+    price: 399,
     rating: 4.7,
     image: img("photo-1552611052-33e04de081de"),
     restaurantId: "r6",
@@ -216,7 +265,7 @@ export const dishes: Dish[] = [
   {
     id: "d7",
     name: "Chocolate Lava Cake",
-    price: 7.5,
+    price: 229,
     rating: 4.9,
     image: img("photo-1606313564200-e75d5e30476c"),
     restaurantId: "r7",
@@ -229,23 +278,127 @@ export const dishes: Dish[] = [
   {
     id: "d8",
     name: "Butter Chicken",
-    price: 13.99,
-    rating: 4.6,
+    price: 379,
+    rating: 4.7,
     image: img("photo-1585937421612-70a008356fbe"),
     restaurantId: "r8",
     restaurantName: "Spice Route",
     description: "Tender chicken in a creamy tomato and butter gravy, served with basmati rice.",
     ingredients: ["Chicken", "Tomato", "Butter", "Cream", "Spices"],
     veg: false,
-    category: "asian",
+    category: "indian",
+  },
+  {
+    id: "d9",
+    name: "Paneer Tikka Masala",
+    price: 329,
+    rating: 4.6,
+    image: img("photo-1631452180519-c014fe946bc7"),
+    restaurantId: "r9",
+    restaurantName: "Punjab Grill",
+    description: "Grilled paneer cubes simmered in a rich tomato, cashew and butter gravy.",
+    ingredients: ["Paneer", "Tomato", "Cashew", "Cream", "Kasuri methi"],
+    veg: true,
+    category: "indian",
+  },
+  {
+    id: "d10",
+    name: "Chicken Biryani",
+    price: 349,
+    rating: 4.8,
+    image: img("photo-1633945274309-2c16c9adfa62"),
+    restaurantId: "r10",
+    restaurantName: "Paradise Biryani",
+    description: "Fragrant long-grain basmati rice layered with spiced chicken, saffron and fried onions.",
+    ingredients: ["Basmati rice", "Chicken", "Saffron", "Fried onion", "Whole spices"],
+    veg: false,
+    category: "biryani",
+  },
+  {
+    id: "d11",
+    name: "Veg Hyderabadi Biryani",
+    price: 279,
+    rating: 4.5,
+    image: img("photo-1589302168068-964664d93dc0"),
+    restaurantId: "r10",
+    restaurantName: "Paradise Biryani",
+    description: "Aromatic dum-cooked biryani with mixed vegetables, mint and cool raita on the side.",
+    ingredients: ["Basmati rice", "Mixed vegetables", "Mint", "Yogurt", "Whole spices"],
+    veg: true,
+    category: "biryani",
+  },
+  {
+    id: "d12",
+    name: "Masala Dosa",
+    price: 149,
+    rating: 4.7,
+    image: img("photo-1630383249896-424e482df921"),
+    restaurantId: "r12",
+    restaurantName: "Chennai Express",
+    description: "Crispy rice crepe stuffed with spiced potato masala, served with sambar and chutneys.",
+    ingredients: ["Rice batter", "Potato", "Onion", "Mustard seeds", "Curry leaves"],
+    veg: true,
+    category: "indian",
+  },
+  {
+    id: "d13",
+    name: "Chole Bhature",
+    price: 179,
+    rating: 4.6,
+    image: img("photo-1626132647523-66f10a24b6fe"),
+    restaurantId: "r11",
+    restaurantName: "Sattvik Rasoi",
+    description: "Spicy chickpea curry paired with fluffy deep-fried bhature and pickled onions.",
+    ingredients: ["Chickpeas", "Refined flour", "Onion", "Tomato", "Spices"],
+    veg: true,
+    category: "indian",
+  },
+  {
+    id: "d14",
+    name: "Tandoori Chicken (Half)",
+    price: 319,
+    rating: 4.7,
+    image: img("photo-1599487488170-d11ec9c172f0"),
+    restaurantId: "r9",
+    restaurantName: "Punjab Grill",
+    description: "Yogurt-marinated chicken char-grilled in a clay tandoor with mint chutney.",
+    ingredients: ["Chicken", "Yogurt", "Ginger", "Garlic", "Tandoori masala"],
+    veg: false,
+    category: "indian",
+  },
+  {
+    id: "d15",
+    name: "Gulab Jamun (4 pcs)",
+    price: 99,
+    rating: 4.8,
+    image: img("photo-1601303516534-bf1f4e64d3f3"),
+    restaurantId: "r11",
+    restaurantName: "Sattvik Rasoi",
+    description: "Soft milk-solid dumplings soaked in rose and cardamom sugar syrup.",
+    ingredients: ["Khoya", "Sugar", "Rose water", "Cardamom"],
+    veg: true,
+    category: "dessert",
+  },
+  {
+    id: "d16",
+    name: "Masala Chai",
+    price: 49,
+    rating: 4.6,
+    image: img("photo-1571934811356-5cc061b6821f"),
+    restaurantId: "r12",
+    restaurantName: "Chennai Express",
+    description: "Hot milk tea brewed with ginger, cardamom, clove and fresh spices.",
+    ingredients: ["Tea", "Milk", "Ginger", "Cardamom", "Clove"],
+    veg: true,
+    category: "drinks",
   },
 ];
 
 export const addOns = [
-  { id: "a1", name: "Extra Cheese", price: 1.5 },
-  { id: "a2", name: "Garlic Bread", price: 3.5 },
-  { id: "a3", name: "Coca-Cola", price: 2.0 },
-  { id: "a4", name: "Fries", price: 3.0 },
+  { id: "a1", name: "Extra Cheese", price: 60 },
+  { id: "a2", name: "Garlic Naan", price: 79 },
+  { id: "a3", name: "Coca-Cola", price: 60 },
+  { id: "a4", name: "Masala Fries", price: 99 },
 ];
 
 export const reviews = [
