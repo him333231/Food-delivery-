@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Clock, Package, RotateCcw, Sparkles } from "lucide-react";
+import { Clock, Package, RotateCcw, Sparkles, Navigation } from "lucide-react";
 import { getOrders, type OrderRecord } from "@/lib/recommendations";
 import { useCart } from "@/lib/cart-context";
 import { dishes } from "@/lib/data";
+import { formatINR } from "@/lib/currency";
+
 
 export const Route = createFileRoute("/orders")({
   head: () => ({
@@ -100,8 +102,9 @@ function OrdersPage() {
               <div className="text-right">
                 <div className="text-xs text-muted-foreground">Total</div>
                 <div className="font-display text-xl font-bold text-primary">
-                  ${order.total.toFixed(2)}
+                  {formatINR(order.total)}
                 </div>
+
               </div>
             </div>
 
@@ -121,17 +124,25 @@ function OrdersPage() {
                   </div>
                   <div className="text-right text-sm">
                     <div className="font-semibold">
-                      ${(it.price * it.quantity).toFixed(2)}
+                      {formatINR(it.price * it.quantity)}
                     </div>
                     <div className="text-xs text-muted-foreground">
                       × {it.quantity}
                     </div>
                   </div>
+
                 </li>
               ))}
             </ul>
 
-            <div className="mt-4 flex justify-end">
+            <div className="mt-4 flex flex-wrap justify-end gap-2">
+              <Link
+                to="/track/$id"
+                params={{ id: order.id }}
+                className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background px-4 py-2 text-sm font-semibold"
+              >
+                <Navigation className="h-4 w-4" /> Track
+              </Link>
               <button
                 onClick={() => reorder(order)}
                 className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-soft transition hover:opacity-90 active:scale-[0.98]"
@@ -139,6 +150,7 @@ function OrdersPage() {
                 <RotateCcw className="h-4 w-4" /> Reorder
               </button>
             </div>
+
           </li>
         ))}
       </ul>

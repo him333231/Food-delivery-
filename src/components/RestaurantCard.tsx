@@ -1,5 +1,6 @@
 import { Star, Clock, Bike } from "lucide-react";
 import type { Restaurant } from "@/lib/data";
+import { formatINR } from "@/lib/currency";
 
 export function RestaurantCard({ r }: { r: Restaurant }) {
   return (
@@ -43,7 +44,7 @@ export function RestaurantCard({ r }: { r: Restaurant }) {
           </span>
           <span>{r.distance}</span>
           <span className="inline-flex items-center gap-1">
-            <Bike className="h-3.5 w-3.5" /> ${r.deliveryFee.toFixed(2)}
+            <Bike className="h-3.5 w-3.5" /> {formatINR(r.deliveryFee)}
           </span>
         </div>
       </div>

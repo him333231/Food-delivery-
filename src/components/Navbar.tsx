@@ -1,9 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { ShoppingCart, MapPin, Search, Receipt } from "lucide-react";
+import { ShoppingCart, MapPin, Search, Receipt, Moon, Sun } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
+import { useTheme } from "@/lib/theme-context";
 
 export function Navbar() {
   const { count } = useCart();
+  const { theme, toggle } = useTheme();
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/80 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6">
@@ -15,7 +17,7 @@ export function Navbar() {
         </Link>
         <div className="hidden items-center gap-1 text-sm text-muted-foreground md:flex">
           <MapPin className="h-4 w-4 text-primary" />
-          <span className="font-medium text-foreground">Downtown</span>
+          <span className="font-medium text-foreground">Bengaluru</span>
           <span>· 10 min</span>
         </div>
         <nav className="ml-auto flex items-center gap-1 text-sm font-medium">
@@ -47,6 +49,14 @@ export function Navbar() {
             aria-label="Search"
           >
             <Search className="h-5 w-5" />
+          </button>
+          <button
+            onClick={toggle}
+            className="rounded-lg p-2 hover:bg-primary-soft"
+            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            title={theme === "dark" ? "Light mode" : "Dark mode"}
+          >
+            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
           <Link
             to="/cart"

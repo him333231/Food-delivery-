@@ -142,8 +142,9 @@ function Home() {
             </h2>
             <p className="mt-2 text-primary-foreground/90">
               Use code <span className="font-bold">BITES30</span> at checkout. Free
-              delivery on orders above $25.
+              delivery on orders above ₹499.
             </p>
+
             <Link
               to="/restaurants"
               className="mt-6 inline-flex items-center gap-2 rounded-full bg-background px-5 py-2.5 text-sm font-semibold text-primary shadow-soft"

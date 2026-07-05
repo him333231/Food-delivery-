@@ -4,6 +4,8 @@ import { Sparkles, Star, Clock, Plus, Bot } from "lucide-react";
 import { generateRecommendations, type Recommendation } from "@/lib/recommendations";
 import { useCart } from "@/lib/cart-context";
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatINR } from "@/lib/currency";
+
 
 export function AiRecommendations() {
   const [loading, setLoading] = useState(true);
@@ -111,8 +113,9 @@ export function AiRecommendations() {
                     </div>
                     <div className="mt-3 flex items-center justify-between">
                       <span className="font-display text-lg font-bold">
-                        ${rec.dish.price.toFixed(2)}
+                        {formatINR(rec.dish.price)}
                       </span>
+
                       <button
                         onClick={() => addItem(rec.dish)}
                         className="inline-flex items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-soft transition hover:opacity-90 active:scale-[0.97]"

@@ -4,6 +4,8 @@ import { Star, Minus, Plus, ShoppingCart, ArrowLeft } from "lucide-react";
 import { getDish, dishes, addOns, reviews } from "@/lib/data";
 import { useCart } from "@/lib/cart-context";
 import { DishCard } from "@/components/DishCard";
+import { formatINR } from "@/lib/currency";
+
 
 export const Route = createFileRoute("/dish/$id")({
   loader: ({ params }) => {
@@ -101,8 +103,9 @@ function DishDetails() {
           </div>
 
           <div className="mt-4 font-display text-3xl font-bold text-primary">
-            ${dish.price.toFixed(2)}
+            {formatINR(dish.price)}
           </div>
+
 
           <p className="mt-4 text-muted-foreground">{dish.description}</p>
 
@@ -137,8 +140,9 @@ function DishDetails() {
                   >
                     <span className="font-medium">{a.name}</span>
                     <span className="text-muted-foreground">
-                      +${a.price.toFixed(2)}
+                      +{formatINR(a.price)}
                     </span>
+
                   </button>
                 );
               })}
@@ -167,7 +171,7 @@ function DishDetails() {
               onClick={() => addItem(dish, qty)}
               className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground shadow-soft transition hover:opacity-90 active:scale-95"
             >
-              <ShoppingCart className="h-4 w-4" /> Add to cart · ${total.toFixed(2)}
+              <ShoppingCart className="h-4 w-4" /> Add to cart · {formatINR(total)}
             </button>
           </div>
         </div>

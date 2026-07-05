@@ -38,16 +38,22 @@ export function getOrders(): OrderRecord[] {
   return [];
 }
 
-export function saveOrder(order: Omit<OrderRecord, "id" | "placedAt">) {
-  if (typeof window === "undefined") return;
-  const prev = getOrders();
+export function saveOrder(order: Omit<OrderRecord, "id" | "placedAt">): OrderRecord {
   const next: OrderRecord = {
     id: `ord_${Date.now()}`,
     placedAt: Date.now(),
     ...order,
   };
+  if (typeof window === "undefined") return next;
+  const prev = getOrders();
   window.localStorage.setItem(ORDERS_KEY, JSON.stringify([next, ...prev].slice(0, 50)));
+  return next;
 }
+
+export function getOrder(id: string): OrderRecord | undefined {
+  return getOrders().find((o) => o.id === id);
+}
+
 
 export type UserPrefs = {
   orderHistory: string[]; // dish ids
