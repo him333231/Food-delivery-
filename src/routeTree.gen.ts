@@ -74,10 +74,23 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/cart' | '/orders' | '/restaurants' | '/dish/$id' | '/track/$id'
+  fullPaths:
+    | '/'
+    | '/cart'
+    | '/orders'
+    | '/restaurants'
+    | '/dish/$id'
+    | '/track/$id'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/cart' | '/orders' | '/restaurants' | '/dish/$id' | '/track/$id'
-  id: '__root__' | '/' | '/cart' | '/orders' | '/restaurants' | '/dish/$id' | '/track/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/cart'
+    | '/orders'
+    | '/restaurants'
+    | '/dish/$id'
+    | '/track/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,18 +132,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dish/$id': {
-      id: '/dish/$id'
-      path: '/dish/$id'
-      fullPath: '/dish/$id'
-      preLoaderRoute: typeof DishIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/track/$id': {
       id: '/track/$id'
       path: '/track/$id'
       fullPath: '/track/$id'
       preLoaderRoute: typeof TrackIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dish/$id': {
+      id: '/dish/$id'
+      path: '/dish/$id'
+      fullPath: '/dish/$id'
+      preLoaderRoute: typeof DishIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
