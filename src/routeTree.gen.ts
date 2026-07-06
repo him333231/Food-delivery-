@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RestaurantsRouteImport } from './routes/restaurants'
 import { Route as OrdersRouteImport } from './routes/orders'
+import { Route as NutritionRouteImport } from './routes/nutrition'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrackIdRouteImport } from './routes/track.$id'
@@ -25,6 +26,11 @@ const RestaurantsRoute = RestaurantsRouteImport.update({
 const OrdersRoute = OrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NutritionRoute = NutritionRouteImport.update({
+  id: '/nutrition',
+  path: '/nutrition',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CartRoute = CartRouteImport.update({
@@ -56,6 +62,7 @@ const ApiChatRoute = ApiChatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/nutrition': typeof NutritionRoute
   '/orders': typeof OrdersRoute
   '/restaurants': typeof RestaurantsRoute
   '/api/chat': typeof ApiChatRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/nutrition': typeof NutritionRoute
   '/orders': typeof OrdersRoute
   '/restaurants': typeof RestaurantsRoute
   '/api/chat': typeof ApiChatRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/nutrition': typeof NutritionRoute
   '/orders': typeof OrdersRoute
   '/restaurants': typeof RestaurantsRoute
   '/api/chat': typeof ApiChatRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/cart'
+    | '/nutrition'
     | '/orders'
     | '/restaurants'
     | '/api/chat'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/cart'
+    | '/nutrition'
     | '/orders'
     | '/restaurants'
     | '/api/chat'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/cart'
+    | '/nutrition'
     | '/orders'
     | '/restaurants'
     | '/api/chat'
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CartRoute: typeof CartRoute
+  NutritionRoute: typeof NutritionRoute
   OrdersRoute: typeof OrdersRoute
   RestaurantsRoute: typeof RestaurantsRoute
   ApiChatRoute: typeof ApiChatRoute
@@ -135,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/orders'
       fullPath: '/orders'
       preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nutrition': {
+      id: '/nutrition'
+      path: '/nutrition'
+      fullPath: '/nutrition'
+      preLoaderRoute: typeof NutritionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cart': {
@@ -178,6 +198,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CartRoute: CartRoute,
+  NutritionRoute: NutritionRoute,
   OrdersRoute: OrdersRoute,
   RestaurantsRoute: RestaurantsRoute,
   ApiChatRoute: ApiChatRoute,

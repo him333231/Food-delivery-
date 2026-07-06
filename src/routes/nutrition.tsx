@@ -66,24 +66,20 @@ function NutritionPage() {
   const dailyChart = useMemo(() => {
     const days: { day: string; kcal: number }[] = [];
     for (let i = 6; i >= 0; i--) {
-      const start = now - i * DAY;
-      const s = sumRange(entries, start - DAY / 2).calories -
-        sumRange(entries, start + DAY / 2).calories;
-      const label = new Date(start).toLocaleDateString("en-IN", {
+      const label = new Date(now - i * DAY).toLocaleDateString("en-IN", {
         weekday: "short",
       });
-      days.push({ day: label, kcal: Math.max(0, Math.round(s)) });
+      days.push({ day: label, kcal: 0 });
     }
-    // simpler: bucket by date string
-    const map = new Map<string, number>();
     entries.forEach((e) => {
       if (e.loggedAt < now - 7 * DAY) return;
       const k = new Date(e.loggedAt).toLocaleDateString("en-IN", {
         weekday: "short",
       });
-      map.set(k, (map.get(k) ?? 0) + e.calories);
+      const bucket = days.find((d) => d.day === k);
+      if (bucket) bucket.kcal += e.calories;
     });
-    return days.map((d) => ({ day: d.day, kcal: Math.round(map.get(d.day) ?? 0) }));
+    return days.map((d) => ({ day: d.day, kcal: Math.round(d.kcal) }));
   }, [entries, now]);
 
   const macroData = [
