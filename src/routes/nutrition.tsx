@@ -316,7 +316,7 @@ function NutritionPage() {
                     borderRadius: 12,
                   }}
                 />
-                <Bar dataKey="kcal" fill="hsl(var(--primary))" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="kcal" fill="#3b82f6" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
