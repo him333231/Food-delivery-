@@ -15,6 +15,7 @@ import { CartProvider } from "@/lib/cart-context";
 import { ThemeProvider } from "@/lib/theme-context";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { AiChatWidget } from "@/components/AiChatWidget";
 
 
 function NotFoundComponent() {
@@ -143,6 +144,7 @@ function RootComponent() {
               <Outlet />
             </main>
             <Footer />
+            <AiChatWidget />
           </div>
         </CartProvider>
       </ThemeProvider>

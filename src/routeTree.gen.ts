@@ -11,10 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RestaurantsRouteImport } from './routes/restaurants'
 import { Route as OrdersRouteImport } from './routes/orders'
+import { Route as NutritionRouteImport } from './routes/nutrition'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TrackIdRouteImport } from './routes/track.$id'
 import { Route as DishIdRouteImport } from './routes/dish.$id'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 
 const RestaurantsRoute = RestaurantsRouteImport.update({
   id: '/restaurants',
@@ -24,6 +26,11 @@ const RestaurantsRoute = RestaurantsRouteImport.update({
 const OrdersRoute = OrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NutritionRoute = NutritionRouteImport.update({
+  id: '/nutrition',
+  path: '/nutrition',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CartRoute = CartRouteImport.update({
@@ -46,20 +53,29 @@ const DishIdRoute = DishIdRouteImport.update({
   path: '/dish/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/nutrition': typeof NutritionRoute
   '/orders': typeof OrdersRoute
   '/restaurants': typeof RestaurantsRoute
+  '/api/chat': typeof ApiChatRoute
   '/dish/$id': typeof DishIdRoute
   '/track/$id': typeof TrackIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/nutrition': typeof NutritionRoute
   '/orders': typeof OrdersRoute
   '/restaurants': typeof RestaurantsRoute
+  '/api/chat': typeof ApiChatRoute
   '/dish/$id': typeof DishIdRoute
   '/track/$id': typeof TrackIdRoute
 }
@@ -67,8 +83,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cart': typeof CartRoute
+  '/nutrition': typeof NutritionRoute
   '/orders': typeof OrdersRoute
   '/restaurants': typeof RestaurantsRoute
+  '/api/chat': typeof ApiChatRoute
   '/dish/$id': typeof DishIdRoute
   '/track/$id': typeof TrackIdRoute
 }
@@ -77,18 +95,30 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/cart'
+    | '/nutrition'
     | '/orders'
     | '/restaurants'
+    | '/api/chat'
     | '/dish/$id'
     | '/track/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cart' | '/orders' | '/restaurants' | '/dish/$id' | '/track/$id'
+  to:
+    | '/'
+    | '/cart'
+    | '/nutrition'
+    | '/orders'
+    | '/restaurants'
+    | '/api/chat'
+    | '/dish/$id'
+    | '/track/$id'
   id:
     | '__root__'
     | '/'
     | '/cart'
+    | '/nutrition'
     | '/orders'
     | '/restaurants'
+    | '/api/chat'
     | '/dish/$id'
     | '/track/$id'
   fileRoutesById: FileRoutesById
@@ -96,8 +126,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CartRoute: typeof CartRoute
+  NutritionRoute: typeof NutritionRoute
   OrdersRoute: typeof OrdersRoute
   RestaurantsRoute: typeof RestaurantsRoute
+  ApiChatRoute: typeof ApiChatRoute
   DishIdRoute: typeof DishIdRoute
   TrackIdRoute: typeof TrackIdRoute
 }
@@ -116,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/orders'
       fullPath: '/orders'
       preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nutrition': {
+      id: '/nutrition'
+      path: '/nutrition'
+      fullPath: '/nutrition'
+      preLoaderRoute: typeof NutritionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cart': {
@@ -146,14 +185,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DishIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CartRoute: CartRoute,
+  NutritionRoute: NutritionRoute,
   OrdersRoute: OrdersRoute,
   RestaurantsRoute: RestaurantsRoute,
+  ApiChatRoute: ApiChatRoute,
   DishIdRoute: DishIdRoute,
   TrackIdRoute: TrackIdRoute,
 }

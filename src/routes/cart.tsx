@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { recordOrder, saveOrder } from "@/lib/recommendations";
+import { logConsumption } from "@/lib/nutrition";
+import { ComboSuggest } from "@/components/ComboSuggest";
 import { formatINR } from "@/lib/currency";
 import {
   getAddresses,
@@ -117,6 +119,7 @@ function CartPage() {
       return;
     }
     recordOrder(items.map((i) => i.dish.id));
+    logConsumption(items.map((i) => ({ dishId: i.dish.id, quantity: i.quantity })));
     const record = saveOrder({
       total,
       items: items.map((i) => ({
@@ -224,6 +227,8 @@ function CartPage() {
               ))}
             </ul>
           </section>
+
+          <ComboSuggest />
 
           {/* Address book */}
           <section className="rounded-2xl border border-border/60 bg-card p-4 sm:p-6">
