@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ShoppingCart, MapPin, Search, Receipt, Moon, Sun } from "lucide-react";
+import { ShoppingCart, MapPin, Search, Receipt, Moon, Sun, Activity } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { useTheme } from "@/lib/theme-context";
 
