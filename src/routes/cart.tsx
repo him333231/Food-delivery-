@@ -119,6 +119,7 @@ function CartPage() {
       return;
     }
     recordOrder(items.map((i) => i.dish.id));
+    logConsumption(items.map((i) => ({ dishId: i.dish.id, quantity: i.quantity })));
     const record = saveOrder({
       total,
       items: items.map((i) => ({
