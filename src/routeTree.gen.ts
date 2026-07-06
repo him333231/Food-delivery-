@@ -65,9 +65,9 @@ export interface FileRoutesByFullPath {
   '/nutrition': typeof NutritionRoute
   '/orders': typeof OrdersRoute
   '/restaurants': typeof RestaurantsRoute
-  '/api/chat': typeof ApiChatRoute
   '/dish/$id': typeof DishIdRoute
   '/track/$id': typeof TrackIdRoute
+  '/api/chat': typeof ApiChatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -75,9 +75,9 @@ export interface FileRoutesByTo {
   '/nutrition': typeof NutritionRoute
   '/orders': typeof OrdersRoute
   '/restaurants': typeof RestaurantsRoute
-  '/api/chat': typeof ApiChatRoute
   '/dish/$id': typeof DishIdRoute
   '/track/$id': typeof TrackIdRoute
+  '/api/chat': typeof ApiChatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,9 +86,9 @@ export interface FileRoutesById {
   '/nutrition': typeof NutritionRoute
   '/orders': typeof OrdersRoute
   '/restaurants': typeof RestaurantsRoute
-  '/api/chat': typeof ApiChatRoute
   '/dish/$id': typeof DishIdRoute
   '/track/$id': typeof TrackIdRoute
+  '/api/chat': typeof ApiChatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -98,9 +98,9 @@ export interface FileRouteTypes {
     | '/nutrition'
     | '/orders'
     | '/restaurants'
-    | '/api/chat'
     | '/dish/$id'
     | '/track/$id'
+    | '/api/chat'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -108,9 +108,9 @@ export interface FileRouteTypes {
     | '/nutrition'
     | '/orders'
     | '/restaurants'
-    | '/api/chat'
     | '/dish/$id'
     | '/track/$id'
+    | '/api/chat'
   id:
     | '__root__'
     | '/'
@@ -118,9 +118,9 @@ export interface FileRouteTypes {
     | '/nutrition'
     | '/orders'
     | '/restaurants'
-    | '/api/chat'
     | '/dish/$id'
     | '/track/$id'
+    | '/api/chat'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -129,9 +129,9 @@ export interface RootRouteChildren {
   NutritionRoute: typeof NutritionRoute
   OrdersRoute: typeof OrdersRoute
   RestaurantsRoute: typeof RestaurantsRoute
-  ApiChatRoute: typeof ApiChatRoute
   DishIdRoute: typeof DishIdRoute
   TrackIdRoute: typeof TrackIdRoute
+  ApiChatRoute: typeof ApiChatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -201,9 +201,9 @@ const rootRouteChildren: RootRouteChildren = {
   NutritionRoute: NutritionRoute,
   OrdersRoute: OrdersRoute,
   RestaurantsRoute: RestaurantsRoute,
-  ApiChatRoute: ApiChatRoute,
   DishIdRoute: DishIdRoute,
   TrackIdRoute: TrackIdRoute,
+  ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
