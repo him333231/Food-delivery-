@@ -106,6 +106,11 @@ function Home() {
       {/* AI RECOMMENDED */}
       <AiRecommendations />
 
+      {/* ADVANCED AI SECTIONS */}
+      <AdvancedRecs />
+
+
+
 
       {/* POPULAR RESTAURANTS */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
