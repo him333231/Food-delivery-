@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { recordOrder, saveOrder } from "@/lib/recommendations";
+import { logConsumption } from "@/lib/nutrition";
+import { ComboSuggest } from "@/components/ComboSuggest";
 import { formatINR } from "@/lib/currency";
 import {
   getAddresses,
