@@ -3,6 +3,7 @@ import { Search, Sparkles, ArrowRight, Star } from "lucide-react";
 import { categories, restaurants } from "@/lib/data";
 import { RestaurantCard } from "@/components/RestaurantCard";
 import { AiRecommendations } from "@/components/AiRecommendations";
+import { AdvancedRecs } from "@/components/AdvancedRecs";
 
 export const Route = createFileRoute("/")({
   component: Home,
