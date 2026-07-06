@@ -83,9 +83,9 @@ function NutritionPage() {
   }, [entries, now]);
 
   const macroData = [
-    { name: "Protein", value: Math.round(week.protein), color: "hsl(var(--primary))" },
-    { name: "Carbs", value: Math.round(week.carbs), color: "hsl(var(--warning, 38 92% 50%))" },
-    { name: "Fat", value: Math.round(week.fat), color: "hsl(var(--destructive))" },
+    { name: "Protein", value: Math.round(week.protein), color: "#3b82f6" },
+    { name: "Carbs", value: Math.round(week.carbs), color: "#f59e0b" },
+    { name: "Fat", value: Math.round(week.fat), color: "#ef4444" },
   ];
 
   const dishCount = new Map<string, number>();
